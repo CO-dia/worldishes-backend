@@ -2,6 +2,8 @@ package com.worldishes.controllers;
 
 import com.worldishes.models.Rating;
 import com.worldishes.services.RatingService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +19,18 @@ public class RatingController {
     }
 
     @GetMapping
-    public List<Rating> getRatings() {
+    public List<RatingService.RatingResponse> getRatings() {
         return ratingService.getRatings();
     }
 
-    @GetMapping("/{ratingId}")
-    public Rating getRating(@PathVariable("ratingId") UUID id) {
+    @GetMapping("/{id}")
+    public RatingService.RatingResponse getRating(@PathVariable UUID id) {
         return ratingService.getRating(id);
     }
 
     @PostMapping
-    public Rating createRating(Rating rating) {
-        return ratingService.createRating(rating);
+    public ResponseEntity<RatingService.RatingResponse> createRating(@RequestBody RatingService.RatingRequest ratingRequest) {
+        RatingService.RatingResponse createdRating = ratingService.createRating(ratingRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdRating);
     }
 }

@@ -1,8 +1,6 @@
 package com.worldishes.services;
 
-import com.worldishes.models.Dish;
 import com.worldishes.models.DishIngredient;
-import com.worldishes.models.Ingredient;
 import com.worldishes.repositories.DishIngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +20,7 @@ public class DishIngredientService {
     }
 
     // Add a new ingredient to a dish
-    public DishIngredient addIngredientToDish(UUID dishId, Ingredient ingredient, Double quantity, String unit) {
+    public DishIngredient addIngredientToDish(UUID dishId, String ingredient, Double quantity, String unit) {
         DishIngredient dishIngredient = new DishIngredient();
         dishIngredient.setDishId(dishId);
         dishIngredient.setIngredient(ingredient);

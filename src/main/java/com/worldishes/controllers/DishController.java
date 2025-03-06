@@ -19,32 +19,33 @@ public class DishController {
     }
 
     @GetMapping
-    public List<Dish> getDishes() {
-        return dishService.getDishes();
+    public ResponseEntity<List<DishService.DishResponse>> getAllDishes() {
+        return ResponseEntity.ok(dishService.getDishes());
     }
 
-    @GetMapping("/{dishId}")
-    public Dish getDish(@PathVariable("dishId") UUID id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<DishService.DishResponse> getDishById(@PathVariable UUID id) {
         // TODO: Add implementation to get user's rating on the dish using RatingRepository.findByDishIdAndUserId
 
-        return dishService.getDish(id);
+        return ResponseEntity.ok(dishService.getDish(id));
     }
 
     @PostMapping
-    private ResponseEntity<Dish> createDish(@RequestBody Dish request) {
-        Dish createdDish = dishService.createDishes(request);
+    private ResponseEntity<DishService.DishResponse> createDish(@RequestBody DishService.DishRequest request) {
+        DishService.DishResponse createdDish = dishService.createDishes(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdDish);
     }
 
-    @PutMapping("/{dishId}")
-    private ResponseEntity<Dish> updateDish(@PathVariable("dishId") UUID id, @RequestBody Dish request) {
-        Dish dish = dishService.updateDish(id, request);
+    @PutMapping("/{id}")
+    private ResponseEntity<DishService.DishResponse> updateDish(@PathVariable UUID id, @RequestBody DishService.DishRequest updatedDish) {
+        DishService.DishResponse dish = dishService.updateDish(id, updatedDish);
         return ResponseEntity.ok(dish);
     }
 
-    @DeleteMapping("/{dishId}")
-    private ResponseEntity.BodyBuilder deleteDish(@PathVariable("dishId") UUID id) {
+    /* Because API unsecured, we don't want to allow deletion of dishes
+    @DeleteMapping("/{id}")
+    private ResponseEntity.BodyBuilder deleteDish(@PathVariable UUID id) {
         dishService.deleteDish(id);
         return ResponseEntity.ok();
-    }
+    }*/
 }

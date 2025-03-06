@@ -15,15 +15,14 @@ public class DishIngredient {
     @JoinColumn(name = "dish_id", nullable = false)
     private UUID dishId;
 
-    @ManyToOne
-    @JoinColumn(name = "ingredient_id", nullable = false)
-    private Ingredient ingredient;
+    @Column(nullable = false)
+    private String ingredient;
 
     @Column(nullable = false)
     private Double quantity;
     private String unit;
 
-    public DishIngredient(UUID id, UUID dishId, Ingredient ingredient, Double quantity, String unit) {
+    public DishIngredient(UUID id, UUID dishId, String ingredient, Double quantity, String unit) {
         this.id = id;
         this.dishId = dishId;
         this.ingredient = ingredient;
@@ -50,11 +49,11 @@ public class DishIngredient {
         this.dishId = dishId;
     }
 
-    public Ingredient getIngredient() {
+    public String getIngredient() {
         return ingredient;
     }
 
-    public void setIngredient(Ingredient ingredient) {
+    public void setIngredient(String ingredient) {
         this.ingredient = ingredient;
     }
 
