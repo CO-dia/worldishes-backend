@@ -1,6 +1,6 @@
 package com.worldishes.services;
 
-import com.worldishes.UserDTO;
+import com.worldishes.DTO.UserDTO;
 import com.worldishes.models.Dish;
 import com.worldishes.models.User;
 import com.worldishes.repositories.DishRepository;

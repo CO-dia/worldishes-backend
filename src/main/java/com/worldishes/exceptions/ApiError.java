@@ -1,4 +1,4 @@
-package com.worldishes;
+package com.worldishes.exceptions;
 
 import java.time.LocalDateTime;
 

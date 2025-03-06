@@ -11,3 +11,12 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
+amazon:
+  aws:
+    accessKey: AccessKey
+    secretKey: SectretKey
+    region: Region
+
+aws:
+  s3:
+    bucket: BucketName
