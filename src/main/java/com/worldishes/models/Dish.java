@@ -36,7 +36,7 @@ public class Dish {
     @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DishIngredient> dishIngredients;  // List of ingredients for this dish*/
 
-    public Dish(UUID id,
+    public Dish(
                 User user,
                 String name,
                 String description,
@@ -45,7 +45,6 @@ public class Dish {
                 String countryCode,
                 String youtubeLink,
                 Double ratingAverage) {
-        this.id = id;
         this.user = user;
         this.name = name;
         this.description = description;

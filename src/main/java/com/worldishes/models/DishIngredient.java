@@ -22,8 +22,7 @@ public class DishIngredient {
     private Double quantity;
     private String unit;
 
-    public DishIngredient(UUID id, UUID dishId, String ingredient, Double quantity, String unit) {
-        this.id = id;
+    public DishIngredient(UUID dishId, String ingredient, Double quantity, String unit) {
         this.dishId = dishId;
         this.ingredient = ingredient;
         this.quantity = quantity;

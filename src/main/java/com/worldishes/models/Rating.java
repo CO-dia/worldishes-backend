@@ -25,12 +25,11 @@ public class Rating {
     @Column(length = 500)
     private String comment;
 
-    public Rating(UUID id,
+    public Rating(
                   User user,
                   UUID dishId,
                   Integer stars,
                   String comment) {
-        this.id = id;
         this.dishId = dishId;
         this.user = user;
         this.stars = stars;
