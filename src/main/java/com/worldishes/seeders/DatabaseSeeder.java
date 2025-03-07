@@ -1,17 +1,11 @@
 package com.worldishes.seeders;
 
-import com.worldishes.models.Dish;
-import com.worldishes.models.DishIngredient;
-import com.worldishes.models.Rating;
-import com.worldishes.models.User;
-import com.worldishes.repositories.DishRepository;
-import com.worldishes.repositories.DishIngredientRepository;
-import com.worldishes.repositories.RatingRepository;
-import com.worldishes.repositories.UserRepository;
+import com.worldishes.models.*;
+import com.worldishes.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
-import java.util.UUID;
 
 @Component
 public class DatabaseSeeder implements CommandLineRunner {
@@ -19,19 +13,27 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final DishRepository dishRepository;
     private final DishIngredientRepository dishIngredientRepository;
     private final RatingRepository ratingRepository;
+    private final ImageRepository imageRepository;
 
     public DatabaseSeeder(UserRepository userRepository, DishRepository dishRepository,
-                          DishIngredientRepository dishIngredientRepository, RatingRepository ratingRepository) {
+                          DishIngredientRepository dishIngredientRepository, RatingRepository ratingRepository,
+                          ImageRepository imageRepository) {
         this.userRepository = userRepository;
         this.dishRepository = dishRepository;
         this.dishIngredientRepository = dishIngredientRepository;
         this.ratingRepository = ratingRepository;
+        this.imageRepository = imageRepository;
     }
 
     @Override
     public void run(String... args) {
         if (userRepository.count() == 0) { // Only seed if DB is empty
             System.out.println("🌱 Seeding database...");
+
+            Dish dish1;
+            Dish dish2;
+            Dish dish3;
+            Dish dish4;
 
             // 1️⃣ Seed Users
             List<User> users = List.of(
@@ -50,10 +52,14 @@ public class DatabaseSeeder implements CommandLineRunner {
 
             // 2️⃣ Seed Dishes
             List<Dish> dishes = List.of(
-                    new Dish(users.get(3), "Pasta", "Classic Italian dish", 30, "Boil pasta, add sauce", "IT", "https://youtube.com/pasta", 4.5),
-                    new Dish(users.get(1), "Poutine", "Canadian specialty", 20, "Fries, cheese curds, gravy", "CA", "https://youtube.com/poutine", 4.8),
-                    new Dish(users.get(1), "Sushi", "Japanese delicacy", 40, "Rice, fish, roll", "JP", "https://youtube.com/sushi", 4.9),
-                    new Dish(users.get(7), "Tacos", "Mexican street food", 25, "Tortilla, meat, toppings", "MX", "https://youtube.com/tacos", 4.7),
+                    dish1 = new Dish(users.get(3), "Pasta", "Classic Italian dish", 30, "Boil pasta, add sauce", "IT"
+                            , "https://youtube.com/pasta", 4.5),
+                    dish2 = new Dish(users.get(1), "Poutine", "Canadian specialty", 20, "Fries, cheese curds, gravy",
+                            "CA", "https://youtube.com/poutine", 4.8),
+                    dish3 = new Dish(users.get(1), "Sushi", "Japanese delicacy", 40, "Rice, fish, roll", "JP", "https" +
+                            "://youtube.com/sushi", 4.9),
+                    dish4 = new Dish(users.get(7), "Tacos", "Mexican street food", 25, "Tortilla, meat, toppings",
+                            "MX", "https://youtube.com/tacos", 4.7),
                     new Dish(users.get(4), "Biryani", "Spiced rice dish", 50, "Cook rice, add meat, spices", "IN", "https://youtube.com/biryani", 4.6),
                     new Dish(users.get(8), "Burger", "Classic American", 15, "Grill patty, assemble burger", "US", "https://youtube.com/burger", 4.3),
                     new Dish(users.get(2), "Pho", "Vietnamese soup", 45, "Boil broth, add noodles, meat", "VN", "https://youtube.com/pho", 4.8),
@@ -92,6 +98,15 @@ public class DatabaseSeeder implements CommandLineRunner {
                     new Rating(users.get(9), dishes.get(9).getId(), 5, "Crispy falafel")
             );
             ratingRepository.saveAll(ratings);
+
+            List<Image> images = List.of(
+                    new Image(dish1.getId(), "https://worldishes-images-bucket.s3.us-east-2.amazonaws.com/pasta.jpg"),
+                    new Image(dish2.getId(), "https://worldishes-images-bucket.s3.us-east-2.amazonaws.com/poutine" +
+                            ".jpeg"),
+                    new Image(dish3.getId(), "https://worldishes-images-bucket.s3.us-east-2.amazonaws.com/sushi.jpg"),
+                    new Image(dish4.getId(), "https://worldishes-images-bucket.s3.us-east-2.amazonaws.com/tacos.webp")
+            );
+            imageRepository.saveAll(images);
 
             System.out.println("✅ Database seeding completed!");
         } else {

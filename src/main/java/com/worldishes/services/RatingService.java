@@ -30,8 +30,9 @@ public class RatingService {
                 .collect(Collectors.toList());
     }
 
-    public RatingResponse getRating(UUID id) {
-        Rating rating = RatingRepository.findById(id).orElseThrow(() -> new RuntimeException("Rating not found"));
+    public RatingResponse getRating(String id) {
+        UUID ratingId = UUID.fromString(id);
+        Rating rating = RatingRepository.findById(ratingId).orElseThrow(() -> new RuntimeException("Rating not found"));
         return convertToResponse(rating);
     }
 

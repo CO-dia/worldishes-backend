@@ -1,6 +1,6 @@
 package com.worldishes.controllers;
 
-import com.worldishes.models.Dish;
+import com.worldishes.models.Image;
 import com.worldishes.services.DishService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +28,11 @@ public class DishController {
         // TODO: Add implementation to get user's rating on the dish using RatingRepository.findByDishIdAndUserId
 
         return ResponseEntity.ok(dishService.getDish(id));
+    }
+
+    @GetMapping("/{id}/images")
+    public ResponseEntity<List<Image>> getDishImages(@PathVariable UUID id) {
+        return ResponseEntity.ok(dishService.getDishImages(id));
     }
 
     @PostMapping

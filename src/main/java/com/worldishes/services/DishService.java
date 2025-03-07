@@ -2,8 +2,10 @@ package com.worldishes.services;
 
 import com.worldishes.DTO.UserDTO;
 import com.worldishes.models.Dish;
+import com.worldishes.models.Image;
 import com.worldishes.models.User;
 import com.worldishes.repositories.DishRepository;
+import com.worldishes.repositories.ImageRepository;
 import com.worldishes.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +17,12 @@ import java.util.stream.Collectors;
 public class DishService {
     private final DishRepository dishRepository;
     private final UserRepository userRepository;
+    private final ImageRepository imageRepository;
 
-    public DishService(DishRepository dishRepository, UserRepository userRepository) {
+    public DishService(DishRepository dishRepository, UserRepository userRepository, ImageRepository imageRepository) {
         this.dishRepository = dishRepository;
         this.userRepository = userRepository;
+        this.imageRepository = imageRepository;
     }
 
     public List<DishResponse> getDishes() {
@@ -31,6 +35,10 @@ public class DishService {
         Dish dish = dishRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Dish not found"));
         return convertToResponse(dish);
+    }
+
+    public List<Image> getDishImages(UUID dishId) {
+        return imageRepository.findImagesByDishId(dishId);
     }
 
     public DishResponse createDishes(DishRequest dishRequest) {
@@ -68,13 +76,6 @@ public class DishService {
 
         dishRepository.save(dish);
         return convertToResponse(dish);
-    }
-
-    public void deleteDish(UUID id) {
-        dishRepository.findById(id).map(existingDish -> {
-            dishRepository.delete(existingDish);
-            return existingDish;
-        }).orElseThrow(() -> new RuntimeException("Dish not found"));
     }
 
     // Convert Dish entity to DishResponse
