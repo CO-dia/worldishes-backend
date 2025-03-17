@@ -13,10 +13,13 @@ spring:
     show-sql: true
 amazon:
   aws:
-    accessKey: ${AWS_ACCESS_KEY}
-    secretKey: ${AWS_SECRET_KEY}
-    region: ${AWS_REGION}
+    accessKey: ${WORLDISHES_AWS_ACCESS_KEY}
+    secretKey: ${WORLDISHES_AWS_SECRET_KEY}
+    region: ${WORLDISHES_AWS_REGION}
 
 aws:
   s3:
     bucket: worldishes-images-bucket
+
+jwt:
+  secret: ${WORLDISHES_JWT_SECRET}

@@ -1,8 +1,10 @@
 package com.worldishes.services;
 
 import com.worldishes.DTO.UserDTO;
+import com.worldishes.models.Dish;
 import com.worldishes.models.Rating;
 import com.worldishes.models.User;
+import com.worldishes.repositories.DishRepository;
 import com.worldishes.repositories.RatingRepository;
 import com.worldishes.repositories.UserRepository;
 import org.springframework.lang.NonNull;
@@ -16,28 +18,30 @@ import java.util.stream.Collectors;
 
 @Service
 public class RatingService {
-    private final RatingRepository RatingRepository;
+    private final RatingRepository ratingRepository;
+    private final DishRepository dishRepository;
     private final UserRepository userRepository;
 
-    public RatingService(RatingRepository RatingRepository, UserRepository userRepository) {
-        this.RatingRepository = RatingRepository;
+    public RatingService(RatingRepository ratingRepository, DishRepository dishRepository, UserRepository userRepository) {
+        this.ratingRepository = ratingRepository;
+        this.dishRepository = dishRepository;
         this.userRepository = userRepository;
     }
 
     public List<RatingResponse> getRatings() {
-        return RatingRepository.findAll().stream()
+        return ratingRepository.findAll().stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
 
     public RatingResponse getRating(String id) {
         UUID ratingId = UUID.fromString(id);
-        Rating rating = RatingRepository.findById(ratingId).orElseThrow(() -> new RuntimeException("Rating not found"));
+        Rating rating = ratingRepository.findById(ratingId).orElseThrow(() -> new RuntimeException("Rating not found"));
         return convertToResponse(rating);
     }
 
     public Optional<RatingResponse> getRatingByDishAndUser(UUID dishId, UUID userId) {
-        Optional<Rating> rating = RatingRepository.findByDishIdAndUserId(dishId, userId);
+        Optional<Rating> rating = ratingRepository.findByDishIdAndUserId(dishId, userId);
         return rating.map(this::convertToResponse);
     }
 
@@ -46,6 +50,29 @@ public class RatingService {
         User user = userRepository.findById(ratingRequest.userId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // Recalculate average rating for the dish
+        UUID dishId = ratingRequest.dishId();
+        Dish dish = dishRepository.findById(dishId)
+                .orElseThrow(() -> new RuntimeException("Dish not found"));
+        Optional<List<Rating>> ratings = ratingRepository.findAllByDishId(dishId);
+        if (ratings.isPresent()) {
+            double averageRating = ratings.get().stream()
+                    .filter(rating -> rating.getStars() != null) // filter ratings where stars are not null
+                    .mapToInt(Rating::getStars)
+                    .average()
+                    .orElse(0);
+
+            // Get the count of ratings with stars
+            long ratingCount = ratings.get().stream()
+                    .filter(rating -> rating.getStars() != null)
+                    .count();
+
+            // Update the dish with the new average rating
+            dish.setRatingAverage(averageRating);
+            dish.setRatingCount((int) ratingCount);
+            dishRepository.save(dish);
+        }
+
         Rating newRating = new Rating();
         newRating.setDishId(ratingRequest.dishId());
         newRating.setUser(user);
@@ -53,7 +80,7 @@ public class RatingService {
         newRating.setComment(ratingRequest.comment());
 
         // Save rating and return response DTO
-        Rating savedRating = RatingRepository.save(newRating);
+        Rating savedRating = ratingRepository.save(newRating);
         return convertToResponse(savedRating);
     }
 

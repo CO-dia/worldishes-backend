@@ -51,14 +51,32 @@ public class DishService {
         dish.setName(dishRequest.name());
         dish.setDescription(dishRequest.description());
         dish.setPreparationTime(dishRequest.preparationTime());
+        dish.setServings(dishRequest.servings());
         dish.setRecipe(dishRequest.recipe());
         dish.setCountryCode(dishRequest.countryCode());
         dish.setYoutubeLink(dishRequest.youtubeLink());
+        dish.setAnonymous(dishRequest.anonymous());
         dish.setUser(user);
 
         // Save dish and return response DTO
         Dish savedDish = dishRepository.save(dish);
         return convertToResponse(savedDish);
+    }
+
+    public Image addImageToDish(UUID dishId, String link, boolean isCover) {
+        // Find the dish by ID
+        Dish dish = dishRepository.findById(dishId)
+                .orElseThrow(() -> new RuntimeException("Dish not found"));
+
+        Image image = new Image(dishId, link, isCover);
+        imageRepository.save(image);
+
+        if (isCover) {
+            dish.setCoverImageUrl(image.getLink());
+            dishRepository.save(dish);
+        }
+
+        return image;
     }
 
     public DishResponse updateDish(UUID id, DishRequest dishRequest) {
@@ -70,9 +88,11 @@ public class DishService {
         if (dishRequest.name() != null) dish.setName(dishRequest.name());
         if (dishRequest.description() != null) dish.setDescription(dishRequest.description());
         if (dishRequest.preparationTime() != null) dish.setPreparationTime(dishRequest.preparationTime());
+        if (dishRequest.servings() != null) dish.setServings(dishRequest.servings());
         if (dishRequest.recipe() != null) dish.setRecipe(dishRequest.recipe());
         if (dishRequest.countryCode() != null) dish.setCountryCode(dishRequest.countryCode());
         if (dishRequest.youtubeLink() != null) dish.setYoutubeLink(dishRequest.youtubeLink());
+        if (dishRequest.anonymous() != null) dish.setAnonymous(dishRequest.anonymous());
 
         dishRepository.save(dish);
         return convertToResponse(dish);
@@ -85,10 +105,14 @@ public class DishService {
                 dish.getName(),
                 dish.getDescription(),
                 dish.getPreparationTime(),
+                dish.getServings(),
                 dish.getRecipe(),
                 dish.getCountryCode(),
+                dish.getCoverImageUrl(),
                 dish.getYoutubeLink(),
                 dish.getRatingAverage(),
+                dish.getRatingCount(),
+                dish.getAnonymous(),
                 new UserDTO(
                         dish.getUser().getName(),
                         dish.getUser().getProfileImageUrl()
@@ -102,10 +126,14 @@ public class DishService {
             String name,
             String description,
             Integer preparationTime,
+            Integer servings,
             String recipe,
             String countryCode,
+            String coverImageUrl,
             String youtubeLink,
             Double ratingAverage,
+            Integer ratingCount,
+            Boolean anonymous,
             UserDTO user
     ) {
     }
@@ -115,10 +143,19 @@ public class DishService {
             String name,
             String description,
             Integer preparationTime,
+            Integer servings,
             String recipe,
             String countryCode,
             String youtubeLink,
+            Boolean anonymous,
             UUID userId
+    ) {
+    }
+
+    public record ImageRequest(
+            UUID dishId,
+            String link,
+            boolean isCover
     ) {
     }
 }

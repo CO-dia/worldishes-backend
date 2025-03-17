@@ -19,10 +19,9 @@ public class Rating {
     @JoinColumn(name = "dish_id", nullable = false)
     private UUID dishId;
 
-    @Column(nullable = false)
     private Integer stars;
 
-    @Column(length = 500)
+    @Column(length = 1000)
     private String comment;
 
     public Rating(

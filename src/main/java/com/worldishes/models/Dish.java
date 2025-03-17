@@ -2,6 +2,7 @@ package com.worldishes.models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -17,16 +18,23 @@ public class Dish {
 
     @Column(length = 500)
     private String description;
-
     private Integer preparationTime;
+    private Integer servings;
 
-    @Column(length = 1000)
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String recipe;
 
     @Column(length = 3)
     private String countryCode;
     private String youtubeLink;
     private Double ratingAverage;
+    private Integer ratingCount;
+    private Boolean anonymous;
+    private String coverImageUrl;
+
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -36,26 +44,90 @@ public class Dish {
     @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DishIngredient> dishIngredients;  // List of ingredients for this dish*/
 
+    // Constructor without coverImage (optional)
     public Dish(
-                User user,
-                String name,
-                String description,
-                Integer preparationTime,
-                String recipe,
-                String countryCode,
-                String youtubeLink,
-                Double ratingAverage) {
+            User user,
+            String name,
+            String description,
+            Integer preparationTime,
+            Integer servings,
+            String recipe,
+            String countryCode,
+            String youtubeLink,
+            Double ratingAverage,
+            Integer ratingCount,
+            Boolean anonymous) {
+        this(user, name, description, preparationTime, servings, recipe, countryCode, youtubeLink, ratingAverage, ratingCount, anonymous, null);
+    }
+
+    // Constructor with coverImage
+    public Dish(
+            User user,
+            String name,
+            String description,
+            Integer preparationTime,
+            Integer servings,
+            String recipe,
+            String countryCode,
+            String youtubeLink,
+            Double ratingAverage,
+            Integer ratingCount,
+            Boolean anonymous,
+            String coverImageUrl) {
         this.user = user;
         this.name = name;
         this.description = description;
         this.preparationTime = preparationTime;
+        this.servings = servings;
         this.recipe = recipe;
         this.countryCode = countryCode;
         this.youtubeLink = youtubeLink;
         this.ratingAverage = ratingAverage;
+        this.ratingCount = ratingCount;
+        this.anonymous = anonymous;
+        this.coverImageUrl = coverImageUrl;
     }
 
-    public Dish() {
+    public Dish() {}
+
+    public String getCoverImageUrl() {
+        return coverImageUrl;
+    }
+
+    public void setCoverImageUrl(String coverImageUrl) {
+        this.coverImageUrl = coverImageUrl;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+
+    public Boolean getAnonymous() {
+        return anonymous;
+    }
+
+    public void setAnonymous(Boolean anonymous) {
+        this.anonymous = anonymous;
+    }
+
+    public Integer getServings() {
+        return servings;
+    }
+
+    public void setServings(Integer servings) {
+        this.servings = servings;
+    }
+
+    public Integer getRatingCount() {
+        return ratingCount;
+    }
+
+    public void setRatingCount(Integer ratingCount) {
+        this.ratingCount = ratingCount;
     }
 
     public Double getRatingAverage() {
@@ -134,26 +206,31 @@ public class Dish {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Dish dish = (Dish) o;
-        return Objects.equals(id, dish.id) && Objects.equals(user, dish.user) && Objects.equals(name, dish.name) && Objects.equals(description, dish.description) && Objects.equals(preparationTime, dish.preparationTime) && Objects.equals(countryCode, dish.countryCode) && Objects.equals(recipe, dish.recipe) && Objects.equals(youtubeLink, dish.youtubeLink) && Objects.equals(ratingAverage, dish.ratingAverage);
+        return Objects.equals(id, dish.id) && Objects.equals(name, dish.name) && Objects.equals(description, dish.description) && Objects.equals(preparationTime, dish.preparationTime) && Objects.equals(servings, dish.servings) && Objects.equals(recipe, dish.recipe) && Objects.equals(countryCode, dish.countryCode) && Objects.equals(youtubeLink, dish.youtubeLink) && Objects.equals(ratingAverage, dish.ratingAverage) && Objects.equals(ratingCount, dish.ratingCount) && Objects.equals(anonymous, dish.anonymous) && Objects.equals(coverImageUrl, dish.coverImageUrl) && Objects.equals(images, dish.images) && Objects.equals(user, dish.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, name, description, preparationTime, recipe, countryCode, youtubeLink, ratingAverage);
+        return Objects.hash(id, name, description, preparationTime, servings, recipe, countryCode, youtubeLink, ratingAverage, ratingCount, anonymous, coverImageUrl, images, user);
     }
 
     @Override
     public String toString() {
         return "Dish{" +
                 "id=" + id +
-                ", user=" + user +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", preparationTime=" + preparationTime +
+                ", servings=" + servings +
                 ", recipe='" + recipe + '\'' +
                 ", countryCode='" + countryCode + '\'' +
                 ", youtubeLink='" + youtubeLink + '\'' +
                 ", ratingAverage=" + ratingAverage +
+                ", ratingCount=" + ratingCount +
+                ", anonymous=" + anonymous +
+                ", coverImageUrl=" + coverImageUrl +
+                ", images=" + images +
+                ", user=" + user +
                 '}';
     }
 }

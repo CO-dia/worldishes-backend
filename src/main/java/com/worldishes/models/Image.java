@@ -17,13 +17,23 @@ public class Image {
 
     @Column(nullable = false)
     private String link;
+    private Boolean cover;
 
-    public Image(UUID dishId, String link) {
+    public Image(UUID dishId, String link, Boolean cover) {
         this.dishId = dishId;
         this.link = link;
+        this.cover = cover;
     }
 
     public Image() {
+    }
+
+    public Boolean getCover() {
+        return cover;
+    }
+
+    public void setCover(Boolean cover) {
+        this.cover = cover;
     }
 
     public String getLink() {
@@ -54,12 +64,13 @@ public class Image {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Image image = (Image) o;
-        return Objects.equals(id, image.id) && Objects.equals(dishId, image.dishId) && Objects.equals(link, image.link);
+        return Objects.equals(id, image.id) && Objects.equals(dishId, image.dishId) && Objects.equals(link,
+                image.link) && Objects.equals(cover, image.cover);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, dishId, link);
+        return Objects.hash(id, dishId, link, cover);
     }
 
     @Override
@@ -68,6 +79,7 @@ public class Image {
                 "id=" + id +
                 ", dishId=" + dishId +
                 ", link='" + link + '\'' +
+                ", cover=" + cover +
                 '}';
     }
 }

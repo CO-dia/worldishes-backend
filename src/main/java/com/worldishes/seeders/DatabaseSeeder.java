@@ -52,20 +52,27 @@ public class DatabaseSeeder implements CommandLineRunner {
 
             // 2️⃣ Seed Dishes
             List<Dish> dishes = List.of(
-                    dish1 = new Dish(users.get(3), "Pasta", "Classic Italian dish", 30, "Boil pasta, add sauce", "IT"
-                            , "https://youtube.com/pasta", 4.5),
-                    dish2 = new Dish(users.get(1), "Poutine", "Canadian specialty", 20, "Fries, cheese curds, gravy",
-                            "CA", "https://youtube.com/poutine", 4.8),
-                    dish3 = new Dish(users.get(1), "Sushi", "Japanese delicacy", 40, "Rice, fish, roll", "JP", "https" +
-                            "://youtube.com/sushi", 4.9),
-                    dish4 = new Dish(users.get(7), "Tacos", "Mexican street food", 25, "Tortilla, meat, toppings",
-                            "MX", "https://youtube.com/tacos", 4.7),
-                    new Dish(users.get(4), "Biryani", "Spiced rice dish", 50, "Cook rice, add meat, spices", "IN", "https://youtube.com/biryani", 4.6),
-                    new Dish(users.get(8), "Burger", "Classic American", 15, "Grill patty, assemble burger", "US", "https://youtube.com/burger", 4.3),
-                    new Dish(users.get(2), "Pho", "Vietnamese soup", 45, "Boil broth, add noodles, meat", "VN", "https://youtube.com/pho", 4.8),
-                    new Dish(users.get(9), "Pad Thai", "Thai noodle dish", 35, "Stir-fry noodles with sauce", "TH", "https://youtube.com/padthai", 4.7),
-                    new Dish(users.get(2), "Ratatouille", "French veggie dish", 30, "Chop vegetables, bake", "FR", "https://youtube.com/ratatouille", 4.5),
-                    new Dish(users.get(6), "Falafel", "Middle Eastern snack", 20, "Fry chickpea balls", "LB", "https://youtube.com/falafel", 4.6)
+                    dish1 = new Dish(users.get(3), "Pasta", "Classic Italian dish", 30, 4, "Boil pasta, add sauce", "IT"
+                            , "https://youtube.com/pasta", 4.5, 2, true, "https://worldishes-images-bucket.s3.us-east-2.amazonaws.com/pasta.jpg"),
+                    dish2 = new Dish(users.get(1), "Poutine", "Canadian specialty", 20, 2, "Fries, cheese curds, gravy",
+                            "CA", "https://youtube.com/poutine", 4.8, 15, false),
+                    dish3 = new Dish(users.get(1), "Sushi", "Japanese delicacy", 40, 6, "Rice, fish, roll", "JP",
+                            "https" +
+                            "://youtube.com/sushi", 4.9, 10, false, "https://worldishes-images-bucket.s3.us-east-2.amazonaws.com/sushi.jpg"),
+                    dish4 = new Dish(users.get(7), "Tacos", "Mexican street food", 25, 15, "Tortilla, meat, toppings",
+                            "MX", "https://youtube.com/tacos", 4.7, 103, true, "https://worldishes-images-bucket.s3.us-east-2.amazonaws.com/tacos.webp"),
+                    new Dish(users.get(4), "Biryani", "Spiced rice dish", 50, 20, "Cook rice, add meat, spices", "IN"
+                            , "https://youtube.com/biryani", 4.6, 5, false),
+                    new Dish(users.get(8), "Burger", "Classic American", 15, 4, "Grill patty, assemble burger", "US",
+                            "https://youtube.com/burger", 3.6, 20, true),
+                    new Dish(users.get(2), "Pho", "Vietnamese soup", 45, 2, "Boil broth, add noodles, meat", "VN",
+                            "https://youtube.com/pho", 4.8, 7, true),
+                    new Dish(users.get(9), "Pad Thai", "Thai noodle dish", 35, 2, "Stir-fry noodles with sauce", "TH"
+                            , "https://youtube.com/padthai", 4.7, 12, false),
+                    new Dish(users.get(2), "Ratatouille", "French veggie dish", 30, 1, "Chop vegetables, bake", "FR",
+                            "https://youtube.com/ratatouille", 4.5, 3, false),
+                    new Dish(users.get(6), "Falafel", "Middle Eastern snack", 20, 6, "Fry chickpea balls", "LB",
+                            "https://youtube.com/falafel", 2.3, 8, false)
             );
             dishRepository.saveAll(dishes);
 
@@ -100,11 +107,14 @@ public class DatabaseSeeder implements CommandLineRunner {
             ratingRepository.saveAll(ratings);
 
             List<Image> images = List.of(
-                    new Image(dish1.getId(), "https://worldishes-images-bucket.s3.us-east-2.amazonaws.com/pasta.jpg"),
+                    new Image(dish1.getId(), "https://worldishes-images-bucket.s3.us-east-2.amazonaws.com/pasta.jpg",
+                            true),
                     new Image(dish2.getId(), "https://worldishes-images-bucket.s3.us-east-2.amazonaws.com/poutine" +
-                            ".jpeg"),
-                    new Image(dish3.getId(), "https://worldishes-images-bucket.s3.us-east-2.amazonaws.com/sushi.jpg"),
-                    new Image(dish4.getId(), "https://worldishes-images-bucket.s3.us-east-2.amazonaws.com/tacos.webp")
+                            ".jpeg", false),
+                    new Image(dish3.getId(), "https://worldishes-images-bucket.s3.us-east-2.amazonaws.com/sushi.jpg",
+                            true),
+                    new Image(dish4.getId(), "https://worldishes-images-bucket.s3.us-east-2.amazonaws.com/tacos.webp"
+                            , true)
             );
             imageRepository.saveAll(images);
 

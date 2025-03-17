@@ -16,12 +16,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    // Endpoint to fetch a user by Google ID
-    @GetMapping("/{googleId}")
-    public Optional<User> getUserByGoogleId(@PathVariable String googleId) {
-        return userService.getUserByGoogleId(googleId);
-    }
-
     // Endpoint to create or fetch a user by Google OAuth data
     @PostMapping
     public User createOrGetUser(@RequestBody User user) {
