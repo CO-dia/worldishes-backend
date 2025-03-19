@@ -5,10 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -25,7 +22,7 @@ public class User implements UserDetails {
 
     private String profileImageUrl;  // Google profile image URL
 
-    @Column(nullable = true)
+    @Column()
     private String googleId; // Google ID for OAuth integration
 
     @Enumerated(EnumType.STRING)
@@ -81,10 +78,21 @@ public class User implements UserDetails {
         this.googleId = googleId;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     // From UserDetails interface
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        if (this.role == null) {
+            return Collections.emptyList();
+        }
+        return List.of(new SimpleGrantedAuthority(this.role.name()));
     }
 
     @Override

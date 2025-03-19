@@ -6,7 +6,6 @@ import com.worldishes.models.Image;
 import com.worldishes.models.User;
 import com.worldishes.repositories.DishRepository;
 import com.worldishes.repositories.ImageRepository;
-import com.worldishes.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,12 +15,10 @@ import java.util.stream.Collectors;
 @Service
 public class DishService {
     private final DishRepository dishRepository;
-    private final UserRepository userRepository;
     private final ImageRepository imageRepository;
 
-    public DishService(DishRepository dishRepository, UserRepository userRepository, ImageRepository imageRepository) {
+    public DishService(DishRepository dishRepository, ImageRepository imageRepository) {
         this.dishRepository = dishRepository;
-        this.userRepository = userRepository;
         this.imageRepository = imageRepository;
     }
 
@@ -41,11 +38,7 @@ public class DishService {
         return imageRepository.findImagesByDishId(dishId);
     }
 
-    public DishResponse createDishes(DishRequest dishRequest) {
-        // Find the user by ID
-        User user = userRepository.findById(dishRequest.userId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+    public DishResponse createDishes(DishRequest dishRequest, User user) {
         // Create a new Dish entity
         Dish dish = new Dish();
         dish.setName(dishRequest.name());
@@ -79,6 +72,7 @@ public class DishService {
         return image;
     }
 
+    /*
     public DishResponse updateDish(UUID id, DishRequest dishRequest) {
         // Find existing dish
         Dish dish = dishRepository.findById(id)
@@ -96,7 +90,7 @@ public class DishService {
 
         dishRepository.save(dish);
         return convertToResponse(dish);
-    }
+    }*/
 
     // Convert Dish entity to DishResponse
     private DishResponse convertToResponse(Dish dish) {

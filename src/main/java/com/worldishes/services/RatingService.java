@@ -6,7 +6,6 @@ import com.worldishes.models.Rating;
 import com.worldishes.models.User;
 import com.worldishes.repositories.DishRepository;
 import com.worldishes.repositories.RatingRepository;
-import com.worldishes.repositories.UserRepository;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -20,12 +19,10 @@ import java.util.stream.Collectors;
 public class RatingService {
     private final RatingRepository ratingRepository;
     private final DishRepository dishRepository;
-    private final UserRepository userRepository;
 
-    public RatingService(RatingRepository ratingRepository, DishRepository dishRepository, UserRepository userRepository) {
+    public RatingService(RatingRepository ratingRepository, DishRepository dishRepository) {
         this.ratingRepository = ratingRepository;
         this.dishRepository = dishRepository;
-        this.userRepository = userRepository;
     }
 
     public List<RatingResponse> getRatings() {
@@ -45,12 +42,17 @@ public class RatingService {
         return rating.map(this::convertToResponse);
     }
 
-    public RatingResponse createRating(@Validated RatingRequest ratingRequest) {
-        // Find the user by ID
-        User user = userRepository.findById(ratingRequest.userId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+    public RatingResponse createRating(@Validated RatingRequest ratingRequest, User user) {
         // Recalculate average rating for the dish
+        Rating newRating = new Rating();
+        newRating.setDishId(ratingRequest.dishId());
+        newRating.setUser(user);
+        newRating.setStars(ratingRequest.stars());
+        newRating.setComment(ratingRequest.comment());
+
+        // Save rating and return response DTO
+        Rating savedRating = ratingRepository.save(newRating);
+
         UUID dishId = ratingRequest.dishId();
         Dish dish = dishRepository.findById(dishId)
                 .orElseThrow(() -> new RuntimeException("Dish not found"));
@@ -73,14 +75,6 @@ public class RatingService {
             dishRepository.save(dish);
         }
 
-        Rating newRating = new Rating();
-        newRating.setDishId(ratingRequest.dishId());
-        newRating.setUser(user);
-        newRating.setStars(ratingRequest.stars());
-        newRating.setComment(ratingRequest.comment());
-
-        // Save rating and return response DTO
-        Rating savedRating = ratingRepository.save(newRating);
         return convertToResponse(savedRating);
     }
 

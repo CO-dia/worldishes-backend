@@ -102,7 +102,7 @@ public class Dish {
         return images;
     }
 
-    public void setImages(List<Image> images) {
+    public void     setImages(List<Image> images) {
         this.images = images;
     }
 

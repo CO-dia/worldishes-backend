@@ -2,6 +2,7 @@ package com.worldishes.services;
 
 import com.worldishes.models.User;
 import com.worldishes.repositories.UserRepository;
+import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,8 +22,15 @@ public class UserService {
     }
 
     // Fetch user by email
-    public Optional<User> getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User getOrCreateUser(Claims claims) {
+        return userRepository.findByEmail(claims.getSubject()).orElseGet(() -> {
+            User user = new User();
+            user.setEmail(claims.getSubject());
+            user.setName((String) claims.get("name"));
+            user.setProfileImageUrl((String) claims.get("picture"));
+            user.setGoogleId((String) claims.get("sub"));
+            return userRepository.save(user); // Save and return the new user
+        });
     }
 
     // Create or update user information (typically when a user logs in for the first time)

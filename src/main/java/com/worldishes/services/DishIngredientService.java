@@ -22,12 +22,16 @@ public class DishIngredientService {
     }
 
     // Add a new ingredient to a dish
-    public DishIngredient addIngredientToDish(UUID dishId, String ingredient, Double quantity, String unit) {
-        DishIngredient dishIngredient = new DishIngredient();
-        dishIngredient.setDishId(dishId);
-        dishIngredient.setIngredient(ingredient);
-        dishIngredient.setQuantity(quantity);
-        dishIngredient.setUnit(unit);
-        return dishIngredientRepository.save(dishIngredient);
+    public List<DishIngredient> addIngredientToDish(UUID dishId, List<DishIngredient> ingredients) {
+        for (DishIngredient ingredient : ingredients) {
+            DishIngredient dishIngredient = new DishIngredient();
+            dishIngredient.setDishId(dishId);
+            dishIngredient.setIngredient(ingredient.getIngredient());
+            dishIngredient.setQuantity(ingredient.getQuantity());
+            dishIngredient.setUnit(ingredient.getUnit());
+            dishIngredientRepository.save(dishIngredient);
+        }
+
+        return ingredients;
     }
 }

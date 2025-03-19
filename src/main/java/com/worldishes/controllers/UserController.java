@@ -4,8 +4,6 @@ import com.worldishes.models.User;
 import com.worldishes.services.UserService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
