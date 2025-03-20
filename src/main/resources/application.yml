@@ -1,11 +1,16 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5332/worldishes
-    username: dia
-    password: password
+    url: ${WORLDISHES_DATABASE_URL}
+    username: ${WORLDISHES_DATABASE_USERNAME}
+    password: ${WORLDISHES_DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 3  # Even lower to be safe
+      minimum-idle: 1
+      connection-timeout: 20000  # 20 seconds
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

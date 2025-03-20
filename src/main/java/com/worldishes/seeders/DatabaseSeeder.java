@@ -1,3 +1,4 @@
+/*
 package com.worldishes.seeders;
 
 import com.worldishes.models.*;
@@ -124,3 +125,4 @@ public class DatabaseSeeder implements CommandLineRunner {
         }
     }
 }
+*/
